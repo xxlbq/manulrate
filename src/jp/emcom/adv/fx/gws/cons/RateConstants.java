@@ -11,19 +11,19 @@ public class RateConstants {
 	
 	
 	
-	
-	public static CpInfo switchGwDes(String parityId) throws JMSException{
-		
-		if(parityId.equals("DB")){
-			return new CpInfo("DB", "topic/gwCounterPartyDBRateTopic", "queue/gwDbOrderRequestQueue");
-		}else if(parityId.equals("GS")){
-			return new CpInfo("GS", "topic/gwCounterPartyGSRateTopic", "queue/gwGsOrderRequestQueue");
-		}else if(parityId.equals("MOCK")){
-			return new CpInfo("MOCK", "topic/gwCounterPartyMOCKRateTopic", "queue/gwMockOrderRequestQueue");
-		}
-		System.out.println("NOT A CP CODE :" + parityId);
-		return null;
-	}
+//	
+//	public static CpInfo switchGwDes(String parityId) throws JMSException{
+//		
+//		if(parityId.equals("DB")){
+//			return new CpInfo("DB", "topic/gwCounterPartyDBRateTopic", "queue/gwDbOrderRequestQueue");
+//		}else if(parityId.equals("GS")){
+//			return new CpInfo("GS", "topic/gwCounterPartyGSRateTopic", "queue/gwGsOrderRequestQueue");
+//		}else if(parityId.equals("MOCK")){
+//			return new CpInfo("MOCK", "topic/gwCounterPartyMOCKRateTopic", "queue/gwMockOrderRequestQueue");
+//		}
+//		System.out.println("NOT A CP CODE :" + parityId);
+//		return null;
+//	}
 	
 	
 }
