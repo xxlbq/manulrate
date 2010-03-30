@@ -4,7 +4,9 @@ package jp.emcom.adv.fx.gws.mnrate;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -103,6 +105,7 @@ public class OrderBuilderView extends org.eclipse.swt.widgets.Composite {
 	
 	//=================
 	private SimpleSender sender = null;
+	private static final Map<String,CpInfo> cpSenders = new HashMap<String,CpInfo>();
 	private static Object lock = new Object();
 	
 //	private int orderProcessInit = 0;
@@ -397,7 +400,7 @@ public class OrderBuilderView extends org.eclipse.swt.widgets.Composite {
 				}
 				
 				{
-					pips_combo2 = new Combo(group2, SWT.READ_ONLY);
+					pips_combo2 = new Combo(group2, SWT.NONE);
 					pips_combo2.setBounds(560, 56, 35, 21);
 					pips_combo2.setBackground(SWTResourceManager.getColor(182,254,223));
 					
@@ -418,7 +421,7 @@ public class OrderBuilderView extends org.eclipse.swt.widgets.Composite {
 					pips_label1.setBounds(532, 28, 28, 14);
 				}
 				{
-					pips_combo1 = new Combo(group2, SWT.READ_ONLY);
+					pips_combo1 = new Combo(group2, SWT.NONE);
 					pips_combo1.setBounds(560, 28, 35, 21);
 					
 					pips_combo1.add("5",0);
@@ -480,12 +483,29 @@ public class OrderBuilderView extends org.eclipse.swt.widgets.Composite {
 			
 			
 			this.layout();
+			
+			initDatas();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 
+
+	private void initDatas() {
+		try {
+			cpSenders.put("DB", new CpInfo("DB", "topic/gwCounterPartyDBRateTopic", "queue/gwDbOrderRequestQueue"));
+//      	cps.put("DR", new CpInfo("DR", "topic/gwCounterPartyDRRateTopic", "queue/gwDrOrderRequestQueue"));
+			cpSenders.put("GS", new CpInfo("GS", "topic/gwCounterPartyGSRateTopic", "queue/gwGsOrderRequestQueue"));
+			cpSenders.put("MOCK", new CpInfo("MOCK", "topic/gwCounterPartyMOCKRateTopic", "queue/gwMockOrderRequestQueue"));
+		} catch (JMSException e) {
+			
+			e.printStackTrace();
+		}
+
+		
+	}
 
 	protected void submitRateForm(RateForm of,Integer no) {
 		
@@ -629,11 +649,13 @@ public class OrderBuilderView extends org.eclipse.swt.widgets.Composite {
 	protected void doUIOpenRate(RateForm of) {
 		
 		try {
-			sender = RateConstants.switchGwDes( of.getPartyId()).getRateSender();
+			sender = cpSenders.get(of.getPartyId()).getRateSender();
 			
 			CpSpotRateInfo r = makeCpRateInfo(of.getPartyId(),of.getCurrencyPair(),of.getBuyPrice(),of.getSellPrice()
 					,of.getPips());
+			System.out.println("============ sending. .. "+r);
 			sender.sendMessage(r);
+			System.out.println("============ send over  .");
 		} catch (JMSException e1) {
 			e1.printStackTrace();
 		}
