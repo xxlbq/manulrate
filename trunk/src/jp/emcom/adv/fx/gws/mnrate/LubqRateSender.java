@@ -167,4 +167,34 @@ public class LubqRateSender {
         
         return r;
     }
+    
+    
+    public static List<CpSpotRateInfo> readDataBase(String partyId){
+    	List<CpSpotRateInfo> oneCpRate
+        CpSpotRateInfo r = new CpSpotRateInfo();
+        
+        r.setCounterPartyId(pid);
+        r.setUsualable(true);
+        r.setCurrencyPair(ccp);
+        r.setMessageTime(new Date());
+        r.setInManualStatus(1);
+        r.setFxPriceId(UUID.randomUUID().toString());
+        r.setBookingType(1);
+        
+        RateBandInfo rbiask = new RateBandInfo();
+        RateBandInfo rbibid = new RateBandInfo();
+        
+        rbiask.setPriceId(UUID.randomUUID().toString());
+        rbibid.setPriceId(UUID.randomUUID().toString());
+
+        rbiask.setRate((new BigDecimal(askPrice)).add( new BigDecimal(new Random().nextDouble())).setScale(3, RoundingMode.UP));
+        rbibid.setRate((new BigDecimal(bidPrice)).add( new BigDecimal(new Random().nextDouble())).setScale(3, RoundingMode.UP));
+        
+        r.setAskBandInfoList(rbiask);
+        r.setBidBandInfoList(rbibid);
+        
+        
+        return r;
+    }
+    
 }

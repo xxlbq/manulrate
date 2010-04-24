@@ -5,25 +5,16 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 
-import jp.emcom.adv.fx.gws.bean.MessageVenderFactory;
-import jp.emcom.adv.fx.gws.bean.OrderBuilderMessageVender;
-import jp.emcom.adv.fx.gws.cons.RateConstants;
 import jp.emcom.adv.fx.gws.ui.SWTResourceManager;
-import jp.emcom.adv.fx.gws.util.StringUtil;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -40,9 +31,6 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
-import cn.bestwiz.jhf.core.bo.enums.CustTraderModeEnum;
-import cn.bestwiz.jhf.core.bo.enums.TradeTypeEnum;
-import cn.bestwiz.jhf.core.jms.DestinationConstant;
 import cn.bestwiz.jhf.core.jms.SimpleSender;
 import cn.bestwiz.jhf.core.jms.bean.CpSpotRateInfo;
 import cn.bestwiz.jhf.core.jms.bean.RateBandInfo;
@@ -206,7 +194,7 @@ public class OrderBuilderView extends org.eclipse.swt.widgets.Composite {
 			{
 				sellPrice_combo2 = new Combo(group2, SWT.NONE);
 				sellPrice_combo2.setBounds(455, 58, 63, 20);
-				sellPrice_combo2.add("110.010",0);
+				sellPrice_combo2.add("110.005",0);
 				sellPrice_combo2.select(0);
 			}
 			{
@@ -217,7 +205,7 @@ public class OrderBuilderView extends org.eclipse.swt.widgets.Composite {
 			{
 				buyPrice_combo2 = new Combo(group2, SWT.NONE);
 				buyPrice_combo2.setBounds(315, 56, 63, 20);
-				buyPrice_combo2.add("110.015",0);
+				buyPrice_combo2.add("110.010",0);
 				buyPrice_combo2.select(0);
 			}
 			{
@@ -406,7 +394,8 @@ public class OrderBuilderView extends org.eclipse.swt.widgets.Composite {
 					
 					pips_combo2.add("5",0);
 					pips_combo2.add("15",1);
-					pips_combo2.add("50",2);
+					pips_combo2.add("30",2);
+					pips_combo2.add("50",3);
 					pips_combo2.select(2);
 					
 				}
@@ -426,7 +415,8 @@ public class OrderBuilderView extends org.eclipse.swt.widgets.Composite {
 					
 					pips_combo1.add("5",0);
 					pips_combo1.add("15",1);
-					pips_combo1.add("50",2);
+					pips_combo1.add("30",2);
+					pips_combo1.add("50",3);
 					pips_combo1.select(0);
 					
 					pips_combo1.setBackground(SWTResourceManager.getColor(182,254,223));
@@ -682,11 +672,10 @@ public class OrderBuilderView extends org.eclipse.swt.widgets.Composite {
         rbiask.setPriceId(UUID.randomUUID().toString());
         rbibid.setPriceId(UUID.randomUUID().toString());
 
-//        rbiask.setRate((askPrice).setScale(3, RoundingMode.UP));
-//        rbibid.setRate((bidPrice).setScale(3, RoundingMode.UP));
+        BigDecimal dopips = pips.divide(new BigDecimal(Math.pow(10, 3)),3, RoundingMode.UP);
       
-        rbiask.setRate((askPrice).add( pips).setScale(3, RoundingMode.UP));
-        rbibid.setRate((bidPrice).subtract(pips).setScale(3, RoundingMode.UP));
+        rbiask.setRate((askPrice).add( dopips).setScale(3, RoundingMode.UP));
+        rbibid.setRate((bidPrice).subtract(dopips).setScale(3, RoundingMode.UP));
 //   
         
         r.setAskBandInfoList(rbiask);
